@@ -21,16 +21,16 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
   @Get()
   async getUserList(
-    @Req() reg: any,
+    @Req() reg: Request,
     @Res() res: any,
   ): Promise<CreateUserDto[]> {
     return res.status(HttpStatus.OK).json(await this.userService.getUserList());
   }
 
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'userId', required: true })
   @Get('/:userId')
   async getUserById(
-    @Req() reg: any,
+    @Req() reg: Request,
     @Res() res: any,
     @Param('userId') userId: string,
   ): Promise<CreateUserDto> {
@@ -40,7 +40,7 @@ export class UsersController {
   }
   @Post()
   async createUser(
-    @Req() reg: any,
+    @Req() reg: Request,
     @Body() body: CreateUserDto,
     @Res() res: any,
   ) {
@@ -48,10 +48,10 @@ export class UsersController {
       .status(HttpStatus.CREATED)
       .json(await this.userService.createUser(body));
   }
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'userId', required: true })
   @Delete('/:userId')
   async deleteUser(
-    @Req() req: any,
+    @Req() req: Request,
     @Res() res: any,
     @Param('userId') userId: string,
   ) {
@@ -60,10 +60,10 @@ export class UsersController {
       .json(await this.userService.deleteUser(userId));
   }
 
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'userId', required: true })
   @Patch('/:userId')
   async updateUser(
-    @Req() req: any,
+    @Req() req: Request,
     @Res() res: any,
     @Body() body: CreateUserDto,
     @Param('userId') userId: any,
