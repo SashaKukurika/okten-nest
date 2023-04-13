@@ -10,16 +10,20 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+
 import { CreateUserDto } from './dto/users.dto';
 import { UsersService } from './users.service';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
   @Get()
-  async getUserList(@Req() reg: any, @Res() res: any): Promise<CreateUserDto[]> {
+  async getUserList(
+    @Req() reg: any,
+    @Res() res: any,
+  ): Promise<CreateUserDto[]> {
     return res.status(HttpStatus.OK).json(await this.userService.getUserList());
   }
 
@@ -69,6 +73,6 @@ export class UsersController {
       .json(await this.userService.updateUser(body, userId));
   }
 
-  @Post('/animals/:userId')
-  async addNewPet() {}
+  // @Post('/animals/:userId')
+  // async addNewPet() {}
 }
