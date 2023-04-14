@@ -13,7 +13,6 @@ import {
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 
-import { CreateUserDto } from './dto/users.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
@@ -21,10 +20,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
   @Get()
-  async getUserList(
-    @Req() reg: Request,
-    @Res() res: any,
-  ): Promise<CreateUserDto[]> {
+  async getUserList(@Req() reg: Request, @Res() res: any): Promise<User[]> {
     return res.status(HttpStatus.OK).json(await this.userService.getUserList());
   }
 
@@ -34,16 +30,28 @@ export class UsersController {
     @Req() reg: Request,
     @Res() res: any,
     @Param('userId') userId: string,
-  ): Promise<CreateUserDto> {
+  ): Promise<User> {
     return res
       .status(HttpStatus.OK)
       .json(await this.userService.getUserById(userId));
   }
 
+  // @ApiParam({ name: 'userId', required: true })
+  // @Get('/:userId')
+  // async getUserInfo(
+  //   @Req() reg: Request,
+  //   @Res() res: any,
+  //   @Param('userId') userId: string,
+  // ): Promise<User> {
+  //   return res
+  //     .status(HttpStatus.OK)
+  //     .json(await this.userService.getUserInfo(userId));
+  // }
+
   @Post()
   async createUser(
     @Req() reg: Request,
-    @Body() body: CreateUserDto,
+    @Body() body: User,
     @Res() res: any,
   ): Promise<User> {
     return res
@@ -67,8 +75,8 @@ export class UsersController {
   async updateUser(
     @Req() req: Request,
     @Res() res: any,
-    @Body() body: CreateUserDto,
-    @Param('userId') userId: any,
+    @Body() body: User,
+    @Param('userId') userId: string,
   ) {
     return res
       .status(HttpStatus.OK)

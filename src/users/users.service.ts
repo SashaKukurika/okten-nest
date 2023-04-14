@@ -2,21 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from '../core/orm/prisma.service';
-import { CreateUserDto } from './dto/users.dto';
 
 @Injectable()
 export class UsersService {
-  private users: any = []; //todo delete
   constructor(private readonly prismaService: PrismaService) {}
 
-  public async getUserList() {
-    return this.users;
+  public async getUserList(): Promise<User[]> {
+    return this.prismaService.user.findMany({ orderBy: { id: 'asc' } });
   }
 
-  public async getUserById(userId: string) {
-    return this.users.find((user) => user.userId === userId);
+  public async getUserById(userId: string): Promise<User> {
+    return this.prismaService.user.findFirst({
+      where: { id: userId },
+      include: {
+        pets: true,
+      },
+    });
   }
-  public async createUser(userDate: CreateUserDto): Promise<User> {
+
+  // public async getUserInfo(userId: string) {
+  //   return this.prismaService.user.findFirst({
+  //     where: { id: Number(userId) },
+  //     select: {
+  //       name: true,
+  //       city: true,
+  //       age: true,
+  //     },
+  //   });
+  // }
+  public async createUser(userDate: User): Promise<User> {
     const { city, name, status, age, email } = userDate;
 
     return this.prismaService.user.create({
@@ -30,16 +44,15 @@ export class UsersService {
     });
   }
 
-  public async updateUser(userDate: CreateUserDto, userId: string) {
-    const index = this.users.findIndex((user) => user.userId === userId);
-    this.users[index] = { ...userDate, userId };
-
-    return this.users[index];
+  public async updateUser(userDate: User, userId: string) {
+    const { city, name, status, age } = userDate;
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { name, status, age, city },
+    });
   }
 
   public async deleteUser(userId: string) {
-    const index = this.users.findIndex((user) => user.userId === userId);
-
-    return this.users.splice(index, 1);
+    return this.prismaService.user.delete({ where: { id: userId } });
   }
 }
