@@ -11,6 +11,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 
 import { CreateUserDto } from './dto/users.dto';
 import { UsersService } from './users.service';
@@ -38,12 +39,13 @@ export class UsersController {
       .status(HttpStatus.OK)
       .json(await this.userService.getUserById(userId));
   }
+
   @Post()
   async createUser(
     @Req() reg: Request,
     @Body() body: CreateUserDto,
     @Res() res: any,
-  ) {
+  ): Promise<User> {
     return res
       .status(HttpStatus.CREATED)
       .json(await this.userService.createUser(body));
