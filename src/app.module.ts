@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
 
 @Module({
-  imports: [UsersModule, PetsModule, PrismaService],
+  imports: [UsersModule, PetsModule],
   controllers: [AppController, UsersController],
   providers: [AppService, UsersService, PrismaService],
 })

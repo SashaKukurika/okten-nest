@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from '../core/orm/prisma.service';
+import { CreateUserDto } from './dto/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,9 +15,9 @@ export class UsersService {
   public async getUserById(userId: string): Promise<User> {
     return this.prismaService.user.findFirst({
       where: { id: userId },
-      include: {
-        pets: true,
-      },
+      // include: {
+      //   pets: true,
+      // },
     });
   }
 
@@ -30,8 +31,8 @@ export class UsersService {
   //     },
   //   });
   // }
-  public async createUser(userDate: User): Promise<User> {
-    const { city, name, status, age, email } = userDate;
+  public async createUser(userDate: CreateUserDto): Promise<User> {
+    const { city, name, status, age, email, avatar } = userDate;
 
     return this.prismaService.user.create({
       data: {
@@ -40,6 +41,7 @@ export class UsersService {
         age,
         city,
         status,
+        avatar,
       },
     });
   }
