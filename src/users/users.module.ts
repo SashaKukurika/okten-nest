@@ -7,8 +7,8 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
 @Module({
-  imports: [PrismaService, PetsModule],
+  imports: [PetsModule],
   controllers: [UsersController],
-  providers: [PrismaService, PetsService, UsersService],
+  providers: [PetsService, UsersService, PrismaService],
 })
 export class UsersModule {}
