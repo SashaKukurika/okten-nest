@@ -29,8 +29,8 @@ import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
   constructor(
-    @Inject(forwardRef(() => PetsService))
     private readonly userService: UsersService,
+    @Inject(forwardRef(() => PetsService))
     private readonly petsService: PetsService,
   ) {}
   @Get()

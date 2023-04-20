@@ -9,7 +9,7 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public async getUserList(): Promise<User[]> {
-    return this.prismaService.user.findMany({ orderBy: { id: 'asc' } });
+    return this.prismaService.user.findMany();
   }
 
   public async getUserById(userId: string): Promise<User> {
