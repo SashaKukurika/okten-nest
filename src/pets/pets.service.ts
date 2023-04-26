@@ -37,8 +37,9 @@ export class PetsService {
     });
   }
 
-  async updateAnimal(data: any) {
-    return this.prismaService.pets.create({
+  async updateAnimal(data: any, petId: string) {
+    return this.prismaService.pets.update({
+      where: { id: +petId },
       data: {
         name: data.name,
         type: data.type,

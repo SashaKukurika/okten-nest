@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpStatus,
+  Param,
   Patch,
   Req,
   Res,
@@ -17,7 +18,7 @@ import { PetsService } from './pets.service';
 @Controller('pets')
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
-  @Patch()
+  @Patch('/:petId')
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -37,6 +38,7 @@ export class PetsController {
     @Req() req: any,
     @Body() body: any,
     @Res() res: any,
+    @Param('petId') petId: string,
     @UploadedFiles()
     files: { image?: Express.Multer.File[]; logo?: Express.Multer.File[] },
   ) {
@@ -49,6 +51,6 @@ export class PetsController {
 
     return res
       .status(HttpStatus.OK)
-      .json(await this.petsService.updateAnimal(body));
+      .json(await this.petsService.updateAnimal(body, petId));
   }
 }
