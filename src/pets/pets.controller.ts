@@ -46,6 +46,7 @@ export class PetsController {
     if (files?.logo) {
       body.logo = `./public/animals/${files.logo[1].filename}`;
     }
+
     return res
       .status(HttpStatus.OK)
       .json(await this.petsService.updateAnimal(body));

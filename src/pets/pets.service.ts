@@ -20,7 +20,7 @@ export class PetsService {
   ) {}
 
   async createAnimal(data: PetDto, userId: string): Promise<Pets> {
-    const { name, type, logo, status, image } = data;
+    const { name, type, status, image, logo } = data;
     const user = await this.userService.getUserById(userId);
     if (!user) {
       throw new HttpException(`no user`, HttpStatus.NOT_FOUND);
@@ -29,9 +29,9 @@ export class PetsService {
       data: {
         name,
         type,
-        // logo,
+        logo,
         status,
-        // image,
+        image,
         ownerId: user.id,
       },
     });
@@ -42,9 +42,9 @@ export class PetsService {
       data: {
         name: data.name,
         type: data.type,
-        // logo,
+        logo: data.logo,
         status: data.status,
-        // image,
+        image: data.image,
         ownerId: data.ownerId,
       },
     });
