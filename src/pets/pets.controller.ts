@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Param,
   Patch,
+  Post,
   Req,
   Res,
   UploadedFiles,
@@ -52,5 +53,40 @@ export class PetsController {
     return res
       .status(HttpStatus.OK)
       .json(await this.petsService.updateAnimal(body, petId));
+  }
+  @Post('/:userId')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'image', maxCount: 1 },
+        { name: 'logo', maxCount: 1 },
+      ],
+      {
+        storage: diskStorage({
+          destination: './public/animals',
+          filename: editFileName,
+        }),
+        fileFilter: imageFileFilter,
+      },
+    ),
+  )
+  public async createPet(
+    @Req() req: any,
+    @Body() body: any,
+    @Res() res: any,
+    @Param('userId') userId: string,
+    @UploadedFiles()
+    files: { image?: Express.Multer.File[]; logo?: Express.Multer.File[] },
+  ) {
+    if (files?.image) {
+      body.image = `./public/animals/${files.image[0].filename}`;
+    }
+    if (files?.logo) {
+      body.logo = `./public/animals/${files.logo[0].filename}`;
+    }
+
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.petsService.createAnimal(body, userId));
   }
 }

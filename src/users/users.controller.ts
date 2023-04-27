@@ -14,10 +14,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { diskStorage } from 'multer';
@@ -114,28 +111,11 @@ export class UsersController {
   }
 
   @Post('/animals/:userId')
-  @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        { name: 'image', maxCount: 1 },
-        { name: 'logo', maxCount: 1 },
-      ],
-      {
-        storage: diskStorage({
-          destination: './public/animals',
-          filename: editFileName,
-        }),
-        fileFilter: imageFileFilter,
-      },
-    ),
-  )
   async addNewPet(
     @Req() req: Request,
     @Res() res: any,
     @Body() body: PetDto,
     @Param('userId') userId: string,
-    @UploadedFile()
-    files: { image?: Express.Multer.File[]; logo?: Express.Multer.File[] },
   ) {
     const user = await this.userService.getUserById(userId);
     if (!user) {
@@ -143,14 +123,8 @@ export class UsersController {
         message: `User with id: ${userId} not found`,
       });
     }
-    if (files?.image) {
-      body.image = `./public/animals/${files.image[0].filename}`;
-    }
-    if (files?.logo) {
-      body.logo = `./public/animals/${files.logo[1].filename}`;
-    }
     return res
       .status(HttpStatus.OK)
-      .json(await this.petsService.createAnimal(body, userId));
+      .json(await this.userService.createPet(body, userId));
   }
 }

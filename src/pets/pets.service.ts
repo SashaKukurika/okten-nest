@@ -14,25 +14,27 @@ import { PetDto } from './dto/pet.dto';
 @Injectable()
 export class PetsService {
   constructor(
-    @Inject(forwardRef(() => UsersService))
     private readonly prismaService: PrismaService,
+    @Inject(forwardRef(() => UsersService))
     private readonly userService: UsersService,
   ) {}
 
   async createAnimal(data: PetDto, userId: string): Promise<Pets> {
-    const { name, type, status, image, logo } = data;
+    const { name, type, status, logo, image } = data;
     const user = await this.userService.getUserById(userId);
+
     if (!user) {
       throw new HttpException(`no user`, HttpStatus.NOT_FOUND);
     }
+
     return this.prismaService.pets.create({
       data: {
         name,
-        type,
-        logo,
         status,
+        type,
         image,
-        ownerId: user.id,
+        logo,
+        ownerId: userId,
       },
     });
   }
@@ -46,7 +48,6 @@ export class PetsService {
         logo: data.logo,
         status: data.status,
         image: data.image,
-        ownerId: data.ownerId,
       },
     });
   }

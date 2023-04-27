@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from '../core/orm/prisma.service';
+import { PetDto } from '../pets/dto/pet.dto';
 import { CreateUserDto } from './dto/users.dto';
 
 @Injectable()
@@ -56,5 +57,18 @@ export class UsersService {
 
   public async deleteUser(userId: string) {
     return this.prismaService.user.delete({ where: { id: userId } });
+  }
+
+  public async createPet(petData: PetDto, userId: string): Promise<PetDto> {
+    const { type, name, status } = petData;
+
+    return this.prismaService.pets.create({
+      data: {
+        name,
+        status,
+        type,
+        ownerId: userId,
+      },
+    });
   }
 }
