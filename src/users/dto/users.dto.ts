@@ -10,6 +10,8 @@ import {
   Min,
 } from 'class-validator';
 
+import { IsValidDays } from '../decorators/check.day.decorator';
+
 export class CreateUserDto {
   @ApiProperty({ example: 'a629712a-b334-4eaf-be13-9228415cb95f' })
   userId: string;
@@ -49,4 +51,11 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  // table for staff
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @IsValidDays()
+  dayOff: string;
 }
