@@ -6,25 +6,18 @@ import { PrismaService } from '../core/orm/prisma.service';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
+import { BearerStrategy } from './bearer.strategy';
 
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'bearer' }),
     JwtModule.register({
       secret: 'jwtConstants.secret',
       signOptions: { expiresIn: '60s' },
     }),
   ],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    UsersService,
-    PrismaService,
-    JwtStrategy,
-  ],
+  providers: [AuthService, BearerStrategy, UsersService, PrismaService],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
+import { RegisterDto } from '../auth/dto/auth.dto';
 import { PrismaService } from '../core/orm/prisma.service';
 import { PetDto } from '../pets/dto/pet.dto';
 import { CreateUserDto } from './dto/users.dto';
@@ -32,7 +34,7 @@ export class UsersService {
   //     },
   //   });
   // }
-  public async createUser(userDate: CreateUserDto): Promise<User> {
+  public async createUserByManager(userDate: CreateUserDto): Promise<User> {
     const { city, name, status, age, email, avatar } = userDate;
 
     return this.prismaService.user.create({
@@ -43,6 +45,18 @@ export class UsersService {
         city,
         status,
         avatar,
+      },
+    });
+  }
+  public async createUser(userDate: RegisterDto): Promise<any> {
+    const { name, email, password } = userDate;
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    return this.prismaService.user.create({
+      data: {
+        name,
+        email,
+        password: passwordHash,
       },
     });
   }
@@ -72,7 +86,7 @@ export class UsersService {
     });
   }
 
-  public async findByUserName(username: string): Promise<User> {
+  public async findByUserEmail(username: string): Promise<User> {
     return this.prismaService.user.findFirst({
       where: { email: username },
     });

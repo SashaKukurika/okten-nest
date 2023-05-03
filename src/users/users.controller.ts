@@ -33,6 +33,8 @@ export class UsersController {
     @Inject(forwardRef(() => PetsService))
     private readonly petsService: PetsService,
   ) {}
+
+  // @UseGuards(AuthGuard())
   @Get()
   async getUserList(@Req() reg: Request, @Res() res: any): Promise<User[]> {
     return res.status(HttpStatus.OK).json(await this.userService.getUserList());
@@ -83,7 +85,7 @@ export class UsersController {
     }
     return res
       .status(HttpStatus.CREATED)
-      .json(await this.userService.createUser(body));
+      .json(await this.userService.createUserByManager(body));
   }
   @ApiParam({ name: 'userId', required: true })
   @Delete('/:userId')

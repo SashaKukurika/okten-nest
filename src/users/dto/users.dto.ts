@@ -44,4 +44,9 @@ export class CreateUserDto {
 
   @ApiProperty()
   avatar: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }
