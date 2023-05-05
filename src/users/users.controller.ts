@@ -12,8 +12,10 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
@@ -34,7 +36,7 @@ export class UsersController {
     private readonly petsService: PetsService,
   ) {}
 
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('bearer'))
   @Get()
   async getUserList(@Req() reg: Request, @Res() res: any): Promise<User[]> {
     return res.status(HttpStatus.OK).json(await this.userService.getUserList());
