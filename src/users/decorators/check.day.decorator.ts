@@ -8,7 +8,7 @@ export const IsValidDays = (validationOptions?: ValidationOptions) => {
       propertyName,
       constraints: [],
       options: {
-        message: 'Inncorect cout of day',
+        message: 'Incorrect count of day',
         ...validationOptions,
       },
       validator: {
